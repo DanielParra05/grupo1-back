@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ceiba.biblioteca.service;
+package com.ceiba.library.controller;
 
 /**
  *
  * @author Augusto
  */
-public interface LibroService {
+public class BookController {
     
 }

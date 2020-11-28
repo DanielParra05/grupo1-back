@@ -3,21 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ceiba.biblioteca.service;
+package com.ceiba.library.service;
 
-import com.ceiba.biblioteca.models.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ceiba.library.models.repository.BookRepository;
 
 /**
  *
  * @author Augusto
  */
 @Service
-public class LibroServicesImpl implements LibroService {
+public class BookServiceImpl implements BookService {
 
     @Autowired
-    public LibroRepository repository;
+    public BookRepository repository;
 
    
 

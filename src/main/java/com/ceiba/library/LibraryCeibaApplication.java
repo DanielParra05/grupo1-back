@@ -1,13 +1,13 @@
-package com.ceiba.biblioteca;
+package com.ceiba.library;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BibliotecaCeibaApplication {
+public class LibraryCeibaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BibliotecaCeibaApplication.class, args);
+		SpringApplication.run(LibraryCeibaApplication.class, args);
 	}
 
 }
