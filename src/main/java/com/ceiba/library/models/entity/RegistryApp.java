@@ -16,6 +16,9 @@ import lombok.Data;
 @MappedSuperclass
 public abstract class RegistryApp {
 
+	/**
+	 * This field the identifier of the entity in the database
+	 */
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

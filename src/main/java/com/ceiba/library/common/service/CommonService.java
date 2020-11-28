@@ -21,4 +21,6 @@ public interface CommonService <T, ID extends Serializable> {
 	
 	void delete(ID id);
 	
+	void lendBook(String user, String isbn);
+	
 }

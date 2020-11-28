@@ -48,6 +48,11 @@ public abstract class CommonServiceImpl<T, ID extends Serializable> implements C
 		getCrudRepository().deleteById(id);
 
 	}
+	
+	@Override
+	public void lendBook(String user, String isbn){
+		
+	}
 
 	public abstract CrudRepository<T, ID> getCrudRepository();
 
