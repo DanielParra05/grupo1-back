@@ -5,7 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Base class for entity registration
+ * Base class, for entity registration
  * @author Jefferson Rios
  *
  */
