@@ -5,10 +5,17 @@
  */
 package com.ceiba.library.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  *
  * @author Augusto
  */
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@RestController
+@RequestMapping({ "/rest/service" })
 public class BookController {
     
 }
