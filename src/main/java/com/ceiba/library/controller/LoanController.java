@@ -5,8 +5,8 @@
  */
 package com.ceiba.library.controller;
 
-import com.ceiba.library.models.entity.Book;
-import com.ceiba.library.service.BookServiceImpl;
+import com.ceiba.library.models.entity.Loan;
+import com.ceiba.library.service.LoanServiceImpl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,19 +30,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
-@RequestMapping({"/rest/service/book"})
-public class BookController {
+@RequestMapping({"/rest/service/loan"})
+public class LoanController {
 
-    private BookServiceImpl bookServiceImpl;
+    private LoanServiceImpl loanServiceImpl;
 
     @GetMapping
     public ResponseEntity<?> list() {
-        return ResponseEntity.ok().body(bookServiceImpl.getCrudRepository().findAll());
+        return ResponseEntity.ok().body(loanServiceImpl.getCrudRepository().findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getId(@PathVariable Long id) {
-        Optional<Book> o = bookServiceImpl.getCrudRepository().findById(id);
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        Optional<Loan> o = loanServiceImpl.getCrudRepository().findById(id);
         if (!o.isPresent()) {
             return ResponseEntity.notFound().build();
         }
@@ -53,38 +53,38 @@ public class BookController {
     /**
      * validated y BindinResult para validar los campos que vienen del Json
      *
-     * @param book
+     * @param loan
      * @param result
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> save(@Validated @RequestBody Book book, BindingResult result) {
+    public ResponseEntity<?> save(@Validated @RequestBody Loan loan, BindingResult result) {
         if (result.hasErrors()) {
             return validated(result);
         }
-        Book bookId = bookServiceImpl.getCrudRepository().save(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookId);
+        Loan loanId = loanServiceImpl.getCrudRepository().save(loan);
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@Validated @RequestBody Book book, BindingResult result,
+    public ResponseEntity<?> edit(@Validated @RequestBody Loan loan, BindingResult result,
             @PathVariable Long id) {
         if (result.hasErrors()) {
             return validated(result);
         }
-        Optional<Book> o = bookServiceImpl.getCrudRepository().findById(id);
+        Optional<Loan> o = loanServiceImpl.getCrudRepository().findById(id);
         if (!o.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Book bookOd = o.get();
-        bookOd.setTitle(bookOd.getTitle());
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookServiceImpl.getCrudRepository().save(bookOd));
+        Loan loanbd = o.get();
+        loanbd.setUser(loan.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanServiceImpl.getCrudRepository().save(loanbd));
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        bookServiceImpl.getCrudRepository().deleteById(id);
+        loanServiceImpl.getCrudRepository().deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
