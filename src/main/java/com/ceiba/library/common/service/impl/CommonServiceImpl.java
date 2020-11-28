@@ -9,6 +9,12 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.ceiba.library.common.service.CommonService;
 
+/**
+ * @author Brian Gomez
+ *
+ * @param <T> entity for generic use of services
+ * @param <ID> data type of principal entity identifier
+ */
 public abstract class CommonServiceImpl<T, ID extends Serializable> implements CommonService<T, ID> {
 
 	@Override
