@@ -1,5 +1,4 @@
 package com.ceiba.library.controller;
-
 import com.ceiba.library.dto.BookDTO;
 import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.service.BookService;
@@ -36,13 +35,6 @@ public class BookController {
 	@GetMapping
 	public ResponseEntity<?> list() {
 		return ResponseEntity.ok().body(bookService.getAll());
-	}
-
-	@GetMapping("/getAvailableBooks/{available}")
-	public ResponseEntity<List<BookDTO>> getAvailableBooks(@PathVariable boolean available) {
-
-		List<BookDTO> listBook = bookService.getAvailableBooks(available);
-		return ResponseEntity.ok().body(listBook);
 	}
 
 	@GetMapping("/{id}")
@@ -103,5 +95,11 @@ public class BookController {
 		});
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
 	}
+	
+	@GetMapping("/getAvailableBooks/{available}")
+	public ResponseEntity<List<BookDTO>> getAvailableBooks(@PathVariable boolean available) {
 
+		List<BookDTO> listBook = bookService.getAvailableBooks(available);
+		return ResponseEntity.ok().body(listBook);
+	}
 }

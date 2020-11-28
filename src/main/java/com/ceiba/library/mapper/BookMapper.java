@@ -25,6 +25,7 @@ public interface BookMapper {
 	@Mapping(source = "bookDTO.title", target = "title")
 	@Mapping(source = "bookDTO.isbn", target = "isbn")
 	@Mapping(source = "bookDTO.stock", target = "stock")
+	@Mapping(source = "bookDTO.state", target = "state")
 	public Book dtoToEntity(BookDTO bookDTO);
 	
 	/**
@@ -36,6 +37,7 @@ public interface BookMapper {
 	@Mapping(source = "book.title", target = "title")
 	@Mapping(source = "book.isbn", target = "isbn")
 	@Mapping(source = "book.stock", target = "stock")
+	@Mapping(source = "book.state", target = "state")
 	public BookDTO entityToDto(Book book);
 	
 	/**

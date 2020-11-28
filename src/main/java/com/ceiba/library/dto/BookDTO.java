@@ -32,4 +32,7 @@ public class BookDTO extends RegistryAppDTO {
 	 */
 	@NotEmpty
 	private Integer stock;
+	
+	@NotEmpty
+	private boolean state;
 }

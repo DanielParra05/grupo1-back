@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.ceiba.library.dto.BookDTO;
 import com.ceiba.library.mapper.BookMapperImpl;
 import com.ceiba.library.models.entity.Book;
@@ -65,7 +64,6 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public void delete(Long id) {
 		bookRepository.deleteById(id);
-
 	}
 
 	@Override
@@ -73,5 +71,4 @@ public class BookServiceImpl implements BookService {
 		List<Book> listEntities = bookRepository.findByState(available);
 		return bookMapper.entitiesToDtos(listEntities);
 	}
-
 }
