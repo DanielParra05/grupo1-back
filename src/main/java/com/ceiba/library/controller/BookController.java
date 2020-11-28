@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ceiba.library.controller;
-
 import com.ceiba.library.models.entity.Book;
-import com.ceiba.library.service.BookServiceImpl;
+import com.ceiba.library.service.BookService;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -33,20 +27,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping({"/rest/service/book"})
 public class BookController {
 
-    private BookServiceImpl bookServiceImpl;
+	@Autowired
+    private BookService bookService;
 
     @GetMapping
     public ResponseEntity<?> list() {
-        return ResponseEntity.ok().body(bookServiceImpl.getCrudRepository().findAll());
+        return ResponseEntity.ok().body(bookService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getId(@PathVariable Long id) {
-        Optional<Book> o = bookServiceImpl.getCrudRepository().findById(id);
-        if (!o.isPresent()) {
+    	Book o = bookService.getById(id);
+        if (o == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(o.get());
+        return ResponseEntity.ok().body(o);
 
     }
 
@@ -62,7 +57,7 @@ public class BookController {
         if (result.hasErrors()) {
             return validated(result);
         }
-        Book bookId = bookServiceImpl.getCrudRepository().save(book);
+        Book bookId = bookService.add(book);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookId);
     }
 
@@ -72,19 +67,17 @@ public class BookController {
         if (result.hasErrors()) {
             return validated(result);
         }
-        Optional<Book> o = bookServiceImpl.getCrudRepository().findById(id);
-        if (!o.isPresent()) {
+        Book o = bookService.getById(id);
+        if (o == null) {
             return ResponseEntity.notFound().build();
         }
-        Book bookOd = o.get();
-        bookOd.setTitle(book.getTitle());
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookServiceImpl.getCrudRepository().save(bookOd));
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.add(book));
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        bookServiceImpl.getCrudRepository().deleteById(id);
+        bookService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

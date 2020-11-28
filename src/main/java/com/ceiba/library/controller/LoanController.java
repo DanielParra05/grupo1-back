@@ -6,10 +6,10 @@
 package com.ceiba.library.controller;
 
 import com.ceiba.library.models.entity.Loan;
-import com.ceiba.library.service.LoanServiceImpl;
+import com.ceiba.library.service.LoanService;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -33,20 +33,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping({"/rest/service/loan"})
 public class LoanController {
 
-    private LoanServiceImpl loanServiceImpl;
+	@Autowired
+    private LoanService loanService;
 
     @GetMapping
     public ResponseEntity<?> list() {
-        return ResponseEntity.ok().body(loanServiceImpl.getCrudRepository().findAll());
+        return ResponseEntity.ok().body(loanService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        Optional<Loan> o = loanServiceImpl.getCrudRepository().findById(id);
-        if (!o.isPresent()) {
+        Loan o = loanService.getById(id);
+        if (o == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(o.get());
+        return ResponseEntity.ok().body(o);
 
     }
 
@@ -62,7 +63,7 @@ public class LoanController {
         if (result.hasErrors()) {
             return validated(result);
         }
-        Loan loanId = loanServiceImpl.getCrudRepository().save(loan);
+        Loan loanId = loanService.add(loan);
         return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
     }
 
@@ -72,19 +73,17 @@ public class LoanController {
         if (result.hasErrors()) {
             return validated(result);
         }
-        Optional<Loan> o = loanServiceImpl.getCrudRepository().findById(id);
-        if (!o.isPresent()) {
+        Loan o = loanService.getById(id);
+        if (o == null) {
             return ResponseEntity.notFound().build();
         }
-        Loan loanbd = o.get();
-        loanbd.setUser(loan.getUser());
-        return ResponseEntity.status(HttpStatus.CREATED).body(loanServiceImpl.getCrudRepository().save(loanbd));
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.add(loan));
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        loanServiceImpl.getCrudRepository().deleteById(id);
+        loanService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
