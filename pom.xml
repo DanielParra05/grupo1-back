@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ceiba.biblioteca</groupId>
-	<artifactId>bibliotecaCeiba</artifactId>
+	<artifactId>BibliotecaCeiba</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>bibliotecaCeiba</name>
+	<name>BibliotecaCeiba</name>
 	<description>Proyecto prueba para la expansión continua de la biblioteca Ceiba</description>
 
 	<properties>
