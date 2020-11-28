@@ -1,17 +1,15 @@
-
 package com.ceiba.library.models.entity;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  *
  * @author Augusto
  */
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "books")
 public class Book extends RegistryApp {
