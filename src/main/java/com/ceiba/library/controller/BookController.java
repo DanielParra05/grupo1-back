@@ -77,7 +77,7 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
         Book bookOd = o.get();
-        bookOd.setTitle(bookOd.getTitle());
+        bookOd.setTitle(book.getTitle());
         return ResponseEntity.status(HttpStatus.CREATED).body(bookServiceImpl.getCrudRepository().save(bookOd));
 
     }
