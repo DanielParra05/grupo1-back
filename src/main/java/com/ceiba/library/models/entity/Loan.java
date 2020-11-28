@@ -2,6 +2,7 @@ package com.ceiba.library.models.entity;
 
 import javax.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 
 /**
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "loans")
+@EqualsAndHashCode(callSuper=false)
 public class Loan extends RegistryApp {
 	
 	/**

@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 import lombok.Data;
 
 /**
- * Base class for entity registration
+ * Base class, for entity registration
  * @author Jefferson Rios
  *
  */
