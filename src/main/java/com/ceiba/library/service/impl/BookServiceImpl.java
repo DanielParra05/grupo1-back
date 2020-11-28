@@ -42,8 +42,10 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public Book add(Book t) {
-		if(t.getStock() != null) {
+		Book bookConsulting = getById(t.getId());
+		if(bookConsulting != null) {
 			t.setStock(t.getStock() + 1);
+			return edit(t);
 		} else {
 			t.setStock(Integer.valueOf(1));
 			t.setState(Boolean.TRUE);
