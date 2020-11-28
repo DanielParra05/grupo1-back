@@ -3,7 +3,6 @@ package com.ceiba.library.models.entity;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import java.time.LocalDate;
 
 @Data
