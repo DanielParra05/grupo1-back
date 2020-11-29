@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author Brian Gomez
  *
- * @param <T> entity for generic use of services
+ * @param <T> object for generic use of services
  * @param <ID> data type of principal entity identifier
  */
 public interface CommonService <T, ID extends Serializable> {
