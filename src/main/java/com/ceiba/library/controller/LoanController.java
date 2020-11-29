@@ -1,6 +1,7 @@
 package com.ceiba.library.controller;
 
 import com.ceiba.library.dto.LoanDTO;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.service.LoanService;
 import java.util.HashMap;
 import java.util.List;
@@ -74,8 +75,15 @@ public class LoanController {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
-		LoanDTO loanId = loanService.add(loan);
-		return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
+		LoanDTO loanId;
+		try {
+			loanId = loanService.lendBook(loan);
+			return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
+		} catch (ApplicationException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("message", e.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**

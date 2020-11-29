@@ -1,6 +1,7 @@
 package com.ceiba.library.controller;
 
 import com.ceiba.library.dto.BookDTO;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.service.BookService;
 import java.util.HashMap;
 import java.util.List;
@@ -105,8 +106,14 @@ public class BookController {
 	 */
 	@DeleteMapping("/{isbn}")
 	public ResponseEntity<?> deleteBook(@PathVariable String isbn) {
-		bookService.delete(isbn);
-		return ResponseEntity.noContent().build();
+		try {
+			bookService.delete(isbn);
+			return ResponseEntity.noContent().build();
+		} catch (ApplicationException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("message", e.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**

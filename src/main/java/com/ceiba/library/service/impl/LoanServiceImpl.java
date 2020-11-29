@@ -10,13 +10,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ceiba.library.dto.BookDTO;
 import com.ceiba.library.dto.LoanDTO;
+import com.ceiba.library.mapper.BookMapper;
 import com.ceiba.library.mapper.LoanMapper;
-import com.ceiba.library.exception.LoanException;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.models.entity.Loan;
 import com.ceiba.library.models.repository.BookRepository;
 import com.ceiba.library.models.repository.LoanRepository;
+import com.ceiba.library.service.BookService;
 import com.ceiba.library.service.LoanService;
 
 /**
@@ -39,12 +42,24 @@ public class LoanServiceImpl implements LoanService {
 	 */
 	@Autowired
 	private LoanMapper loanMapper;
+	
+	/**
+	 * Injection of the related mapper
+	 */
+	@Autowired
+	private BookMapper bookMapper;
 
 	/**
 	 * Injection of the related repository
 	 */
 	@Autowired
 	private BookRepository bookRepository;
+	
+	/**
+	 * Injection of the related service
+	 */
+	@Autowired
+	private BookService bookService;
 
 	/**
 	 * {@inheritDoc}
@@ -97,29 +112,30 @@ public class LoanServiceImpl implements LoanService {
 
 	/**
 	 * This method allows you to register the loan in the database
+	 * @throws ApplicationException 
 	 */
 	@Override
-	public void lendBook(LoanDTO loanDTO) {
+	public LoanDTO lendBook(LoanDTO loanDTO) throws ApplicationException {
 		
-		LocalDate dateDelivery=null;
-		
-		if (!this.valideExistence(loanDTO.getBook().getIsbn())){
-			throw new LoanException("There is no stock of the book to borrow");
-
+		if (!this.valideExistence(loanDTO)){
+			throw new ApplicationException("El libro no está disponible o no existe");
 		}
 
 		if (this.validePallndrome(loanDTO.getBook().getIsbn())) {
-			throw new LoanException("palindromic books only they can use in the library");
+			throw new ApplicationException("No se puede hacer el préstamo porque el ISBN es palíndromo");
 		}
 
 		if (this.countDigits(loanDTO.getBook().getIsbn()) > 30) {
-			dateDelivery = this.getDateDelivery();
-		}
-		
-		loanDTO.setDateDelivery(dateDelivery);
-		
-		this.add(loanDTO);
+			loanDTO.setDateDelivery(getDateDelivery());
+		} 
+		setStock(loanDTO.getBook());
+		loanDTO.setDateRequest(LocalDate.now());
+		return add(loanDTO);
 
+	}
+	
+	private void setStock(BookDTO bookDTO) {
+		bookService.setStock(bookDTO.getIsbn());
 	}
 
 		
@@ -128,14 +144,15 @@ public class LoanServiceImpl implements LoanService {
 	 * @param isbn This parameter saves the identification string of the book
 	 * @return Returns true if the book exists and has stock greater than 0
 	 */
-	private boolean valideExistence(String isbn){
+	private boolean valideExistence(LoanDTO loanDTO){
 		
 		boolean sw = false;
-		Optional<Book> optBook = this.bookRepository.findByIsbn(isbn);
+		Optional<Book> optBook = this.bookRepository.findByIsbn(loanDTO.getBook().getIsbn());
 		
 		if(optBook.isPresent()){
-			Book book = optBook.get();
-			if(book.getStock()>0){
+			BookDTO bookDTO = bookMapper.entityToDto(optBook.get());
+			if(bookDTO.getStock() > 0){
+				loanDTO.setBook(bookDTO);
 				sw = true;
 			}
 		}
