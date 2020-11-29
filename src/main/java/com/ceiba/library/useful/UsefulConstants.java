@@ -12,12 +12,12 @@ public class UsefulConstants {
 	/**
 	 * Constant that represents the message of the books without units
 	 */
-	public static final String MSJ_BOOK_WITHOUT_UNITS = "There is no stock of the book to borrow";
+	public static final String MSJ_BOOK_WITHOUT_UNITS = "El libro no está disponible o no existe";
 
 	/**
 	 * Constant that represents the message of unique use of palindromic words
 	 */
-	public static final String MSJ_PALINDROMIC_ONLY = "palindromic books only they can use in the library";
+	public static final String MSJ_PALINDROMIC_ONLY = "No se puede hacer el préstamo porque el ISBN es palíndromo";
 
 	/**
 	 * total sum of digits in the words

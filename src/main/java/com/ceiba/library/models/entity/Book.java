@@ -27,7 +27,7 @@ public class Book extends RegistryApp {
 	/**
 	 * This field stores the book isbn
 	 */
-	@Column(name = "isbn", nullable = false)
+	@Column(name = "isbn", nullable = false, unique = true)
 	private String isbn;
 
 	/**

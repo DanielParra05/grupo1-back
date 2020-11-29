@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ceiba.library.common.service.CommonService;
 import com.ceiba.library.dto.BookDTO;
+import com.ceiba.library.exception.ApplicationException;
 
 /**
  * Interface that allows remote access to transactional operations
@@ -22,5 +23,7 @@ public interface BookService extends CommonService<BookDTO, Long> {
 	 */
 	List<BookDTO> getAvailableBooks(boolean available);
 	
-	void delete(String isbn);
+	void delete(String isbn) throws ApplicationException;
+	
+	void setStock(String isbn);
 }

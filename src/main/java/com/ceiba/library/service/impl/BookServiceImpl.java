@@ -6,9 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ceiba.library.dto.BookDTO;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.mapper.BookMapper;
 import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.models.repository.BookRepository;
+import com.ceiba.library.models.repository.LoanRepository;
 import com.ceiba.library.service.BookService;
 
 /**
@@ -24,6 +26,12 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Autowired
 	private BookRepository bookRepository;
+	
+	/**
+	 * Injection of the related repository
+	 */
+	@Autowired
+	private LoanRepository loanRepository;
 
 	/**
 	 * Injection of the related mapper
@@ -62,6 +70,9 @@ public class BookServiceImpl implements BookService {
 		if(optBook.isPresent()) {
 			BookDTO bookDTO = bookMapper.entityToDto(optBook.get());
 			bookDTO.setStock(bookDTO.getStock() + 1);
+			if(!bookDTO.isState()) {
+				bookDTO.setState(Boolean.TRUE);
+			}
 			return edit(bookDTO);
 		} else {
 			book.setStock(Integer.valueOf(1));
@@ -90,17 +101,39 @@ public class BookServiceImpl implements BookService {
 	
 	/**
 	 * {@inheritDoc}
+	 * @throws ApplicationException 
 	 */
 	@Override
-	public void delete(String isbn) {
+	public void delete(String isbn) throws ApplicationException  {
 		BookDTO bookDTO = bookMapper.entityToDto(getBookByIsbn(isbn));
 		if(bookDTO != null) {
 			if( bookDTO.getStock() > 1) {
 				bookDTO.setStock(bookDTO.getStock() - 1);
 				edit(bookDTO);
 			} else {
-				bookRepository.deleteById(bookDTO.getId());
+				if(loanRepository.findByBook(bookMapper.dtoToEntity(bookDTO)).isEmpty()) {
+					bookRepository.deleteById(bookDTO.getId());
+				} else {
+					throw new ApplicationException("Existen préstamos relacionados al libro");
+				}
 			}
+		} else {
+			throw new ApplicationException("No existe el libro a eliminar");
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setStock(String isbn) {
+		BookDTO bookDTO = bookMapper.entityToDto(getBookByIsbn(isbn));
+		if (bookDTO != null && bookDTO.getStock() > 0) {
+			bookDTO.setStock(bookDTO.getStock() - 1);
+			if (bookDTO.getStock().equals(Integer.valueOf(0))) {
+				bookDTO.setState(false);
+			}
+			edit(bookDTO);
 		}
 	}
 

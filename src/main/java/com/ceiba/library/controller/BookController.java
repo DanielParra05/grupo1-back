@@ -1,6 +1,7 @@
 package com.ceiba.library.controller;
 
 import com.ceiba.library.dto.BookDTO;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.service.BookService;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public class BookController {
 	private BookService bookService;
 
 	/**
-	 * It allows to obtain all the books registered in the application
+	 * Allows obtain all the books registered in the application
 	 * 
 	 * @return, the book list
 	 */
@@ -49,7 +50,7 @@ public class BookController {
 	}
 
 	/**
-	 * allows you to obtain a book based on your id
+	 * Allows obtain a book based on your id
 	 * 
 	 * @param id, id of the book to search @return, the book found
 	 */
@@ -98,19 +99,25 @@ public class BookController {
 	}
 
 	/**
-	 * allows you to delete a book based on its id
+	 * Deleting a book based on its id
 	 * 
 	 * @param id, id of the book to be removed
 	 * @return
 	 */
 	@DeleteMapping("/{isbn}")
 	public ResponseEntity<?> deleteBook(@PathVariable String isbn) {
-		bookService.delete(isbn);
-		return ResponseEntity.noContent().build();
+		try {
+			bookService.delete(isbn);
+			return ResponseEntity.noContent().build();
+		} catch (ApplicationException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("message", e.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
-	 * method for validating errors
+	 * method to validate errors
 	 *
 	 * @param result
 	 * @return
@@ -124,12 +131,12 @@ public class BookController {
 	}
 
 	/**
-	 * allows you to obtain the list of books that are available or not
+	 * Allow obtaining the list of books that are available or not
 	 * 
 	 * @param available, indicates if you want to obtain the available books or not
 	 * @return
 	 */
-	@GetMapping("/{available}")
+	@GetMapping("/all/{available}")
 	public ResponseEntity<List<BookDTO>> getAvailableBooks(@PathVariable boolean available) {
 
 		List<BookDTO> listBook = bookService.getAvailableBooks(available);

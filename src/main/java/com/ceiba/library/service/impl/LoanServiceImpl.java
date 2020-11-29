@@ -10,13 +10,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ceiba.library.dto.BookDTO;
 import com.ceiba.library.dto.LoanDTO;
+import com.ceiba.library.mapper.BookMapper;
 import com.ceiba.library.mapper.LoanMapper;
-import com.ceiba.library.exception.LoanException;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.models.entity.Loan;
 import com.ceiba.library.models.repository.BookRepository;
 import com.ceiba.library.models.repository.LoanRepository;
+import com.ceiba.library.service.BookService;
 import com.ceiba.library.service.LoanService;
 import com.ceiba.library.useful.UsefulConstants;
 
@@ -42,10 +45,22 @@ public class LoanServiceImpl implements LoanService {
 	private LoanMapper loanMapper;
 
 	/**
+	 * Injection of the related mapper
+	 */
+	@Autowired
+	private BookMapper bookMapper;
+
+	/**
 	 * Injection of the related repository
 	 */
 	@Autowired
 	private BookRepository bookRepository;
+
+	/**
+	 * Injection of the related service
+	 */
+	@Autowired
+	private BookService bookService;
 
 	/**
 	 * {@inheritDoc}
@@ -98,29 +113,30 @@ public class LoanServiceImpl implements LoanService {
 
 	/**
 	 * This method allows you to register the loan in the database
+	 * 
+	 * @throws ApplicationException
 	 */
 	@Override
-	public void lendBook(LoanDTO loanDTO) {
+	public LoanDTO lendBook(LoanDTO loanDTO) throws ApplicationException {
 
-		LocalDate dateDelivery = null;
-
-		if (!this.valideExistence(loanDTO.getBook().getIsbn())) {
-			throw new LoanException(UsefulConstants.MSJ_BOOK_WITHOUT_UNITS);
-
+		if (!this.valideExistence(loanDTO)) {
+			throw new ApplicationException(UsefulConstants.MSJ_BOOK_WITHOUT_UNITS);
 		}
 
 		if (this.validePallndrome(loanDTO.getBook().getIsbn())) {
-			throw new LoanException(UsefulConstants.MSJ_PALINDROMIC_ONLY);
+			throw new ApplicationException(UsefulConstants.MSJ_PALINDROMIC_ONLY);
 		}
 
-		if (this.countDigits(loanDTO.getBook().getIsbn()) > UsefulConstants.DIGIT_SUM_WORD) {
-			dateDelivery = this.getDateDelivery();
+		if (this.countDigits(loanDTO.getBook().getIsbn()) > 30) {
+			loanDTO.setDateDelivery(getDateDelivery());
 		}
+		setStock(loanDTO.getBook());
+		loanDTO.setDateRequest(LocalDate.now());
+		return add(loanDTO);
+	}
 
-		loanDTO.setDateDelivery(dateDelivery);
-
-		this.add(loanDTO);
-
+	private void setStock(BookDTO bookDTO) {
+		bookService.setStock(bookDTO.getIsbn());
 	}
 
 	/**
@@ -129,18 +145,18 @@ public class LoanServiceImpl implements LoanService {
 	 * @param isbn This parameter saves the identification string of the book
 	 * @return Returns true if the book exists and has stock greater than 0
 	 */
-	private boolean valideExistence(String isbn) {
+	private boolean valideExistence(LoanDTO loanDTO) {
 
 		boolean sw = false;
-		Optional<Book> optBook = this.bookRepository.findByIsbn(isbn);
+		Optional<Book> optBook = this.bookRepository.findByIsbn(loanDTO.getBook().getIsbn());
 
 		if (optBook.isPresent()) {
-			Book book = optBook.get();
-			if (book.getStock() > 0) {
+			BookDTO bookDTO = bookMapper.entityToDto(optBook.get());
+			if (bookDTO.getStock() > 0) {
+				loanDTO.setBook(bookDTO);
 				sw = true;
 			}
 		}
-
 		return sw;
 	}
 
@@ -190,14 +206,6 @@ public class LoanServiceImpl implements LoanService {
 		return cDigit;
 	}
 
-	@SuppressWarnings("unused")
-	private LocalDate getDateRequest() {
-
-		Date dateRequest = new Date();
-
-		return dateRequest.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	}
-
 	/**
 	 * This method allows obtaining the maximum date for the delivery of the book
 	 * 
@@ -224,5 +232,4 @@ public class LoanServiceImpl implements LoanService {
 		return dateDelivery.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
 	}
-
 }

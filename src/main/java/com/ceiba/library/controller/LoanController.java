@@ -1,6 +1,7 @@
 package com.ceiba.library.controller;
 
 import com.ceiba.library.dto.LoanDTO;
+import com.ceiba.library.exception.ApplicationException;
 import com.ceiba.library.service.LoanService;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +45,12 @@ public class LoanController {
 	 * @return, the list of loans
 	 */
 	@GetMapping
-	public ResponseEntity<List<LoanDTO>> getAllBooks() {
+	public ResponseEntity<List<LoanDTO>> getAllLoans() {
 		return ResponseEntity.ok().body(loanService.getAll());
 	}
 
 	/**
-	 * Allows you to obtain a book based on your id
+	 * Allow Obtaining a book based on id
 	 * 
 	 * @param id, id of the book to look for @return, the book found
 	 */
@@ -63,7 +64,7 @@ public class LoanController {
 	}
 
 	/**
-	 * validated y BindinResult para validar los campos que vienen del Json
+	 * validated y BindinResult to validate JSON fields
 	 *
 	 * @param loan
 	 * @param result
@@ -74,8 +75,15 @@ public class LoanController {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
-		LoanDTO loanId = loanService.add(loan);
-		return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
+		LoanDTO loanId;
+		try {
+			loanId = loanService.lendBook(loan);
+			return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
+		} catch (ApplicationException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("message", e.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
@@ -100,7 +108,7 @@ public class LoanController {
 	}
 
 	/**
-	 * allows you to delete a loan from your id
+	 * Allows deleting loan from id
 	 * 
 	 * @param id, id of the loan to be eliminated
 	 * @return
@@ -112,13 +120,13 @@ public class LoanController {
 	}
 
 	/**
-	 * method for validating errors
+	 * method to validate errors
 	 *
 	 * @param result
 	 * @return
 	 */
 	protected ResponseEntity<?> validated(BindingResult result) {
-		Map<String, Object> errores = new HashMap<String, Object>();
+		Map<String, Object> errores = new HashMap<>();
 		result.getFieldErrors().forEach(err -> {
 			errores.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
 		});
