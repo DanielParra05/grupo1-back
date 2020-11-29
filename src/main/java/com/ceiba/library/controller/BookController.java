@@ -21,22 +21,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
+ * Controller for access to book services, through web requests
+ * 
  * @author Augusto
+ * @author Brian Gomez
+ * @author Jefferson Rios
  */
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping({ "/rest/service/book" })
 public class BookController {
 
+	/**
+	 * Injection of the related service
+	 */
 	@Autowired
 	private BookService bookService;
 
+	/**
+	 * It allows to obtain all the books registered in the application
+	 * 
+	 * @return, the book list
+	 */
 	@GetMapping
-	public ResponseEntity<?> getAllBooks() {
+	public ResponseEntity<List<BookDTO>> getAllBooks() {
 		return ResponseEntity.ok().body(bookService.getAll());
 	}
 
+	/**
+	 * allows you to obtain a book based on your id
+	 * 
+	 * @param id, id of the book to search @return, the book found
+	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
 		BookDTO bookObtained = bookService.getById(id);
@@ -48,7 +64,7 @@ public class BookController {
 	}
 
 	/**
-	 * validated y BindinResult para validar los campos que vienen del Json
+	 * validated and BindinResult to validate the fields coming from the Json
 	 *
 	 * @param book
 	 * @param result
@@ -63,20 +79,30 @@ public class BookController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bookId);
 	}
 
+	/**
+	 * Allows the edition of a book
+	 * 
+	 * @param book,  edited book
+	 * @param result
+	 * @param id
+	 * @return
+	 */
 	@PutMapping("/{id}")
 	public ResponseEntity<?> editBook(@Validated @RequestBody BookDTO book, BindingResult result,
 			@PathVariable Long id) {
-		if (result.hasErrors()) {
-			return validated(result);
-		}
 		BookDTO bookObtained = bookService.getById(id);
 		if (bookObtained == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(bookService.add(book));
-
 	}
 
+	/**
+	 * allows you to delete a book based on its id
+	 * 
+	 * @param id, id of the book to be removed
+	 * @return
+	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteBook(@PathVariable Long id) {
 		bookService.delete(id);
@@ -84,7 +110,7 @@ public class BookController {
 	}
 
 	/**
-	 * Método para validar los errores
+	 * method for validating errors
 	 *
 	 * @param result
 	 * @return
@@ -97,6 +123,12 @@ public class BookController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
 	}
 
+	/**
+	 * allows you to obtain the list of books that are available or not
+	 * 
+	 * @param available, indicates if you want to obtain the available books or not
+	 * @return
+	 */
 	@GetMapping("/{available}")
 	public ResponseEntity<List<BookDTO>> getAvailableBooks(@PathVariable boolean available) {
 

@@ -3,6 +3,7 @@ package com.ceiba.library.controller;
 import com.ceiba.library.dto.LoanDTO;
 import com.ceiba.library.service.LoanService;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,30 +21,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
+ * Controller that allows access to the services methods, through web requests
+ * 
  * @author Augusto
+ * @author Jefferson Rios
+ * @author Brian Gomez
  */
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping({ "/rest/service/loan" })
 public class LoanController {
 
+	/**
+	 * Injection of the related service
+	 */
 	@Autowired
 	private LoanService loanService;
 
+	/**
+	 * It allows to obtain the list of loans made within the application
+	 * 
+	 * @return, the list of loans
+	 */
 	@GetMapping
-	public ResponseEntity<?> list() {
+	public ResponseEntity<List<LoanDTO>> getAllBooks() {
 		return ResponseEntity.ok().body(loanService.getAll());
 	}
 
+	/**
+	 * Allows you to obtain a book based on your id
+	 * 
+	 * @param id, id of the book to look for @return, the book found
+	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getLoanById(@PathVariable Long id) {
+	public ResponseEntity<LoanDTO> getLoanById(@PathVariable Long id) {
 		LoanDTO loanObtained = loanService.getById(id);
 		if (loanObtained == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok().body(loanObtained);
-
 	}
 
 	/**
@@ -62,8 +78,17 @@ public class LoanController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
 	}
 
+	/**
+	 * Allows the edition of a loan
+	 * 
+	 * @param loan,  loan to be edited
+	 * @param result
+	 * @param id
+	 * @return
+	 */
 	@PutMapping("/{id}")
-	public ResponseEntity<?> editLoan(@Validated @RequestBody LoanDTO loan, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<?> editLoan(@Validated @RequestBody LoanDTO loan, BindingResult result,
+			@PathVariable Long id) {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
@@ -74,6 +99,12 @@ public class LoanController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(loanService.add(loan));
 	}
 
+	/**
+	 * allows you to delete a loan from your id
+	 * 
+	 * @param id, id of the loan to be eliminated
+	 * @return
+	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteLoan(@PathVariable Long id) {
 		loanService.delete(id);
@@ -81,7 +112,7 @@ public class LoanController {
 	}
 
 	/**
-	 * Método para validar los errores
+	 * method for validating errors
 	 *
 	 * @param result
 	 * @return
