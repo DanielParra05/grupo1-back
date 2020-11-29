@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ceiba.library.controller;
 
-import com.ceiba.library.models.entity.Loan;
+import com.ceiba.library.dto.LoanDTO;
 import com.ceiba.library.service.LoanService;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,75 +25,72 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
-@RequestMapping({"/rest/service/loan"})
+@RequestMapping({ "/rest/service/loan" })
 public class LoanController {
 
 	@Autowired
-    private LoanService loanService;
+	private LoanService loanService;
 
-    @GetMapping
-    public ResponseEntity<?> list() {
-        return ResponseEntity.ok().body(loanService.getAll());
-    }
+	@GetMapping
+	public ResponseEntity<?> list() {
+		return ResponseEntity.ok().body(loanService.getAll());
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        Loan o = loanService.getById(id);
-        if (o == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(o);
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getById(@PathVariable Long id) {
+		LoanDTO loanObtained = loanService.getById(id);
+		if (loanObtained == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok().body(loanObtained);
 
-    }
+	}
 
-    /**
-     * validated y BindinResult para validar los campos que vienen del Json
-     *
-     * @param loan
-     * @param result
-     * @return
-     */
-    @PostMapping
-    public ResponseEntity<?> save(@Validated @RequestBody Loan loan, BindingResult result) {
-        if (result.hasErrors()) {
-            return validated(result);
-        }
-        Loan loanId = loanService.add(loan);
-        return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
-    }
+	/**
+	 * validated y BindinResult para validar los campos que vienen del Json
+	 *
+	 * @param loan
+	 * @param result
+	 * @return
+	 */
+	@PostMapping
+	public ResponseEntity<?> save(@Validated @RequestBody LoanDTO loan, BindingResult result) {
+		if (result.hasErrors()) {
+			return validated(result);
+		}
+		LoanDTO loanId = loanService.add(loan);
+		return ResponseEntity.status(HttpStatus.CREATED).body(loanId);
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@Validated @RequestBody Loan loan, BindingResult result,
-            @PathVariable Long id) {
-        if (result.hasErrors()) {
-            return validated(result);
-        }
-        Loan o = loanService.getById(id);
-        if (o == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.add(loan));
+	@PutMapping("/{id}")
+	public ResponseEntity<?> edit(@Validated @RequestBody LoanDTO loan, BindingResult result, @PathVariable Long id) {
+		if (result.hasErrors()) {
+			return validated(result);
+		}
+		LoanDTO loanObtained = loanService.getById(id);
+		if (loanObtained == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(loanService.add(loan));
+	}
 
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		loanService.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        loanService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Método para validar los errores
-     *
-     * @param result
-     * @return
-     */
-    protected ResponseEntity<?> validated(BindingResult result) {
-        Map<String, Object> errores = new HashMap<String, Object>();
-        result.getFieldErrors().forEach(err -> {
-            errores.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
-        });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
-    }
-
+	/**
+	 * Método para validar los errores
+	 *
+	 * @param result
+	 * @return
+	 */
+	protected ResponseEntity<?> validated(BindingResult result) {
+		Map<String, Object> errores = new HashMap<String, Object>();
+		result.getFieldErrors().forEach(err -> {
+			errores.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+		});
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
+	}
 }

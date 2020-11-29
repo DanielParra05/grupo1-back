@@ -1,6 +1,6 @@
 package com.ceiba.library.controller;
+
 import com.ceiba.library.dto.BookDTO;
-import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.service.BookService;
 import java.util.HashMap;
 import java.util.List;
@@ -33,17 +33,17 @@ public class BookController {
 	private BookService bookService;
 
 	@GetMapping
-	public ResponseEntity<?> list() {
+	public ResponseEntity<?> getAllBooks() {
 		return ResponseEntity.ok().body(bookService.getAll());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getId(@PathVariable Long id) {
-		Book o = bookService.getById(id);
-		if (o == null) {
+	public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+		BookDTO bookObtained = bookService.getById(id);
+		if (bookObtained == null) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok().body(o);
+		return ResponseEntity.ok().body(bookObtained);
 
 	}
 
@@ -55,21 +55,22 @@ public class BookController {
 	 * @return
 	 */
 	@PostMapping
-	public ResponseEntity<?> save(@Validated @RequestBody Book book, BindingResult result) {
+	public ResponseEntity<?> saveBook(@Validated @RequestBody BookDTO book, BindingResult result) {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
-		Book bookId = bookService.add(book);
+		BookDTO bookId = bookService.add(book);
 		return ResponseEntity.status(HttpStatus.CREATED).body(bookId);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> edit(@Validated @RequestBody Book book, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<?> editBook(@Validated @RequestBody BookDTO book, BindingResult result,
+			@PathVariable Long id) {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
-		Book o = bookService.getById(id);
-		if (o == null) {
+		BookDTO bookObtained = bookService.getById(id);
+		if (bookObtained == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(bookService.add(book));
@@ -77,7 +78,7 @@ public class BookController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
+	public ResponseEntity<?> deleteBook(@PathVariable Long id) {
 		bookService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -95,8 +96,8 @@ public class BookController {
 		});
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
 	}
-	
-	@GetMapping("/getAvailableBooks/{available}")
+
+	@GetMapping("/{available}")
 	public ResponseEntity<List<BookDTO>> getAvailableBooks(@PathVariable boolean available) {
 
 		List<BookDTO> listBook = bookService.getAvailableBooks(available);

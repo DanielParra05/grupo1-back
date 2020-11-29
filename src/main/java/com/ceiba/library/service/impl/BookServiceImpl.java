@@ -30,24 +30,24 @@ public class BookServiceImpl implements BookService {
 	private BookMapperImpl bookMapper;
 
 	@Override
-	public List<Book> getAll() {
+	public List<BookDTO> getAll() {
 		List<Book> returnList = new ArrayList<>();
 		bookRepository.findAll().forEach(obj -> returnList.add(obj));
-		return returnList;
+		return bookMapper.entitiesToDtos(returnList);
 	}
 
 	@Override
-	public Book getById(Long id) {
+	public BookDTO getById(Long id) {
 		Optional<Book> obj = bookRepository.findById(id);
 		if (obj.isPresent()) {
-			return obj.get();
+			return bookMapper.entityToDto(obj.get());
 		}
 		return null;
 	}
 
 	@Override
-	public Book add(Book t) {
-		Book bookConsulting = getById(t.getId());
+	public BookDTO add(BookDTO t) {
+		BookDTO bookConsulting = getById(t.getId());
 		if (bookConsulting != null) {
 			if (t.getStock() != null) {
 				t.setStock(t.getStock() + 1);
@@ -56,14 +56,17 @@ public class BookServiceImpl implements BookService {
 				t.setStock(Integer.valueOf(1));
 				t.setState(Boolean.TRUE);
 			}
-			return bookRepository.save(t);
+			Book bookSave = bookRepository.save(bookMapper.dtoToEntity(t));
+			return bookMapper.entityToDto(bookSave);
 		}
 		return null;
 	}
 
 	@Override
-	public Book edit(Book t) {
-		return bookRepository.save(t);
+	public BookDTO edit(BookDTO t) {
+		Book bookEntity = bookMapper.dtoToEntity(t);
+		Book bookSave = bookRepository.save(bookEntity);
+		return bookMapper.entityToDto(bookSave);
 	}
 
 	@Override
