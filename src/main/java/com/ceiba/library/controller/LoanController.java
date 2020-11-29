@@ -37,7 +37,7 @@ public class LoanController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getById(@PathVariable Long id) {
+	public ResponseEntity<?> getLoanById(@PathVariable Long id) {
 		LoanDTO loanObtained = loanService.getById(id);
 		if (loanObtained == null) {
 			return ResponseEntity.notFound().build();
@@ -54,7 +54,7 @@ public class LoanController {
 	 * @return
 	 */
 	@PostMapping
-	public ResponseEntity<?> save(@Validated @RequestBody LoanDTO loan, BindingResult result) {
+	public ResponseEntity<?> saveLoan(@Validated @RequestBody LoanDTO loan, BindingResult result) {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
@@ -63,7 +63,7 @@ public class LoanController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> edit(@Validated @RequestBody LoanDTO loan, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<?> editLoan(@Validated @RequestBody LoanDTO loan, BindingResult result, @PathVariable Long id) {
 		if (result.hasErrors()) {
 			return validated(result);
 		}
@@ -75,7 +75,7 @@ public class LoanController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
+	public ResponseEntity<?> deleteLoan(@PathVariable Long id) {
 		loanService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
