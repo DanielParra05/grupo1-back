@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Jefferson Rios
  * @author Brian Gomez
  */
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4201", maxAge = 3600)
 @RestController
 @RequestMapping({ "/rest/service/loan" })
 public class LoanController {

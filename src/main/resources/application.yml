@@ -1,8 +1,8 @@
 spring:
   datasource:
-    password: 12345
-    url: jdbc:mysql://localhost:3306/biblioteca?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
+    password: ${DATABASE_PASSWORD}
+    url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: ${DATABASE_USER}
   jpa:
     database: MYSQL
     generate-ddl: true
