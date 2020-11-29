@@ -75,7 +75,7 @@ public class BookServiceImpl implements BookService {
 			}
 			return edit(bookDTO);
 		} else {
-			book.setStock(Integer.valueOf(1));
+			book.setStock(1);
 			book.setState(Boolean.TRUE);
 		}
 		return edit(book);
@@ -130,7 +130,7 @@ public class BookServiceImpl implements BookService {
 		BookDTO bookDTO = bookMapper.entityToDto(getBookByIsbn(isbn));
 		if (bookDTO != null && bookDTO.getStock() > 0) {
 			bookDTO.setStock(bookDTO.getStock() - 1);
-			if (bookDTO.getStock().equals(Integer.valueOf(0))) {
+			if (bookDTO.getStock().equals(0)) {
 				bookDTO.setState(false);
 			}
 			edit(bookDTO);
