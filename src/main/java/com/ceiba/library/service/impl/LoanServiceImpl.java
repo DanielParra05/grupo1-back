@@ -18,6 +18,7 @@ import com.ceiba.library.models.entity.Loan;
 import com.ceiba.library.models.repository.BookRepository;
 import com.ceiba.library.models.repository.LoanRepository;
 import com.ceiba.library.service.LoanService;
+import com.ceiba.library.useful.UsefulConstants;
 
 /**
  * Interface that allows access to transactions made within the application
@@ -100,46 +101,46 @@ public class LoanServiceImpl implements LoanService {
 	 */
 	@Override
 	public void lendBook(LoanDTO loanDTO) {
-		
-		LocalDate dateDelivery=null;
-		
-		if (!this.valideExistence(loanDTO.getBook().getIsbn())){
-			throw new LoanException("There is no stock of the book to borrow");
+
+		LocalDate dateDelivery = null;
+
+		if (!this.valideExistence(loanDTO.getBook().getIsbn())) {
+			throw new LoanException(UsefulConstants.MSJ_BOOK_WITHOUT_UNITS);
 
 		}
 
 		if (this.validePallndrome(loanDTO.getBook().getIsbn())) {
-			throw new LoanException("palindromic books only they can use in the library");
+			throw new LoanException(UsefulConstants.MSJ_PALINDROMIC_ONLY);
 		}
 
-		if (this.countDigits(loanDTO.getBook().getIsbn()) > 30) {
+		if (this.countDigits(loanDTO.getBook().getIsbn()) > UsefulConstants.DIGIT_SUM_WORD) {
 			dateDelivery = this.getDateDelivery();
 		}
-		
+
 		loanDTO.setDateDelivery(dateDelivery);
-		
+
 		this.add(loanDTO);
 
 	}
 
-		
 	/**
 	 * This method validates the existence of the book and its stock
+	 * 
 	 * @param isbn This parameter saves the identification string of the book
 	 * @return Returns true if the book exists and has stock greater than 0
 	 */
-	private boolean valideExistence(String isbn){
-		
+	private boolean valideExistence(String isbn) {
+
 		boolean sw = false;
 		Optional<Book> optBook = this.bookRepository.findByIsbn(isbn);
-		
-		if(optBook.isPresent()){
+
+		if (optBook.isPresent()) {
 			Book book = optBook.get();
-			if(book.getStock()>0){
+			if (book.getStock() > 0) {
 				sw = true;
 			}
 		}
-		
+
 		return sw;
 	}
 
@@ -189,20 +190,21 @@ public class LoanServiceImpl implements LoanService {
 		return cDigit;
 	}
 
-
+	@SuppressWarnings("unused")
 	private LocalDate getDateRequest() {
 
-		Date dateRequest= new Date();
-		
+		Date dateRequest = new Date();
+
 		return dateRequest.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	}	
-	
+	}
+
 	/**
 	 * This method allows obtaining the maximum date for the delivery of the book
+	 * 
 	 * @return The maximum date the user must be delivered
 	 */
-	private LocalDate getDateDelivery(){
-		
+	private LocalDate getDateDelivery() {
+
 		Date dateDelivery;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
