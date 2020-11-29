@@ -189,13 +189,6 @@ public class LoanServiceImpl implements LoanService {
 		return cDigit;
 	}
 
-
-	private LocalDate getDateRequest() {
-
-		Date dateRequest= new Date();
-		
-		return dateRequest.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	}	
 	
 	/**
 	 * This method allows obtaining the maximum date for the delivery of the book
