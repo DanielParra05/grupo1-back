@@ -45,12 +45,12 @@ public class LoanController {
 	 * @return, the list of loans
 	 */
 	@GetMapping
-	public ResponseEntity<List<LoanDTO>> getAllBooks() {
+	public ResponseEntity<List<LoanDTO>> getAllLoans() {
 		return ResponseEntity.ok().body(loanService.getAll());
 	}
 
 	/**
-	 * Allows you to obtain a book based on your id
+	 * Allow Obtaining a book based on id
 	 * 
 	 * @param id, id of the book to look for @return, the book found
 	 */
@@ -64,7 +64,7 @@ public class LoanController {
 	}
 
 	/**
-	 * validated y BindinResult para validar los campos que vienen del Json
+	 * validated y BindinResult to validate JSON fields
 	 *
 	 * @param loan
 	 * @param result
@@ -108,7 +108,7 @@ public class LoanController {
 	}
 
 	/**
-	 * allows you to delete a loan from your id
+	 * Allows deleting loan from id
 	 * 
 	 * @param id, id of the loan to be eliminated
 	 * @return
@@ -120,7 +120,7 @@ public class LoanController {
 	}
 
 	/**
-	 * method for validating errors
+	 * method to validate errors
 	 *
 	 * @param result
 	 * @return

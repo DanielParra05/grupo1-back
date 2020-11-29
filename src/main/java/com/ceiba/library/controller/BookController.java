@@ -40,7 +40,7 @@ public class BookController {
 	private BookService bookService;
 
 	/**
-	 * It allows to obtain all the books registered in the application
+	 * Allows obtain all the books registered in the application
 	 * 
 	 * @return, the book list
 	 */
@@ -50,7 +50,7 @@ public class BookController {
 	}
 
 	/**
-	 * allows you to obtain a book based on your id
+	 * Allows obtain a book based on your id
 	 * 
 	 * @param id, id of the book to search @return, the book found
 	 */
@@ -99,7 +99,7 @@ public class BookController {
 	}
 
 	/**
-	 * allows you to delete a book based on its id
+	 * Deleting a book based on its id
 	 * 
 	 * @param id, id of the book to be removed
 	 * @return
@@ -117,7 +117,7 @@ public class BookController {
 	}
 
 	/**
-	 * method for validating errors
+	 * method to validate errors
 	 *
 	 * @param result
 	 * @return
@@ -131,7 +131,7 @@ public class BookController {
 	}
 
 	/**
-	 * allows you to obtain the list of books that are available or not
+	 * Allow obtaining the list of books that are available or not
 	 * 
 	 * @param available, indicates if you want to obtain the available books or not
 	 * @return
