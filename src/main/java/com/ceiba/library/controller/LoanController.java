@@ -118,7 +118,7 @@ public class LoanController {
 	 * @return
 	 */
 	protected ResponseEntity<?> validated(BindingResult result) {
-		Map<String, Object> errores = new HashMap<String, Object>();
+		Map<String, Object> errores = new HashMap<>();
 		result.getFieldErrors().forEach(err -> {
 			errores.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
 		});
