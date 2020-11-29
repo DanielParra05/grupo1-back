@@ -51,18 +51,15 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public BookDTO add(BookDTO t) {
-		BookDTO bookConsulting = getById(t.getId());
-		if (bookConsulting != null) {
-			if (t.getStock() != null) {
-				t.setStock(t.getStock() + 1);
-				return edit(t);
-			} else {
-				t.setStock(Integer.valueOf(1));
-				t.setState(Boolean.TRUE);
-			}
-			Book bookSave = bookRepository.save(bookMapper.dtoToEntity(t));
-			return bookMapper.entityToDto(bookSave);
+	public Book add(Book t) {
+		Optional<Book> optBook = bookRepository.findByIsbn(t.getIsbn());
+		if(optBook.isPresent()) {
+			Book book = optBook.get();
+			book.setStock(book.getStock() + 1);
+			return edit(book);
+		} else {
+			t.setStock(Integer.valueOf(1));
+			t.setState(Boolean.TRUE);
 		}
 		return null;
 	}
