@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ceiba.library.service.impl;
 
 import java.util.ArrayList;
@@ -17,18 +12,28 @@ import com.ceiba.library.models.repository.BookRepository;
 import com.ceiba.library.service.BookService;
 
 /**
- *
- * @author Augusto
+ * Class that allows the development of transactional operations within the application
+ * @author Brian Gomez
+ * @author Jefferson Rios
  */
 @Service
 public class BookServiceImpl implements BookService {
 
+	/**
+	 * Injection of the related repository
+	 */
 	@Autowired
 	private BookRepository bookRepository;
 
+	/**
+	 * Injection of the related mapper
+	 */
 	@Autowired
 	private BookMapperImpl bookMapper;
 
+	/**
+	 * {@inheritDoc}} 
+	 */
 	@Override
 	public List<BookDTO> getAll() {
 		List<Book> returnList = new ArrayList<>();
