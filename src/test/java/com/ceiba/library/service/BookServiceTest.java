@@ -29,15 +29,27 @@ import com.ceiba.library.useful.UsefulConstants;
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
 
+	/**
+	 * Injection of the class to be simulated
+	 */
 	@InjectMocks
 	BookServiceImpl bookService;
 
+	/**
+	 * Injection of the mock used in the service
+	 */
 	@Mock
 	BookRepository bookRepository;
 
+	/**
+	 * Injection of the mock used in the service
+	 */
 	@Mock
 	BookMapper bookMapper;
 
+	/**
+	 * Single test to obtain all the books
+	 */
 	@Test
 	public void getAllTest() {
 		List<Book> listBook = generateBookList();
@@ -49,6 +61,9 @@ public class BookServiceTest {
 		assertEquals(idBookExpected, idBookResult);
 	}
 
+	/**
+	 * Unit test to validate the method of obtaining by id
+	 */
 	@Test
 	public void getByIdTest() {
 		Optional<Book> opt = Optional.of(generateBook());
@@ -59,6 +74,9 @@ public class BookServiceTest {
 		assertEquals(UsefulConstants.ID_TEST, testBook.getId());
 	}
 
+	/**
+	 * Unit test to validate the method of adding existing books
+	 */
 	@Test
 	public void addWithStockTest() {
 		Optional<Book> opt = Optional.of(generateBook());
@@ -73,6 +91,9 @@ public class BookServiceTest {
 		assertEquals(UsefulConstants.STOCK_TEST + 1, result.getStock());
 	}
 
+	/**
+	 * Unit test to validate the method of adding new books
+	 */
 	@Test
 	public void addNoStockTest() {
 		Optional<Book> opt = Optional.empty();
@@ -87,6 +108,9 @@ public class BookServiceTest {
 		assertEquals(1, result.getStock());
 	}
 
+	/**
+	 * Unit test to validate the method of obtaining available books
+	 */
 	@Test
 	public void availableBooksTrueTest() {
 		when(bookRepository.findByState(true)).thenReturn(generateBookList());
@@ -96,7 +120,10 @@ public class BookServiceTest {
 
 		assertEquals(1, listDTOS.size());
 	}
-	
+
+	/**
+	 * Unit test to validate the method of obtaining unavailable books
+	 */
 	@Test
 	public void availableBooksFalseTest() {
 		when(bookRepository.findByState(false)).thenReturn(new ArrayList<>());
@@ -107,6 +134,11 @@ public class BookServiceTest {
 		assertEquals(0, listDTOS.size());
 	}
 
+	/**
+	 * Get a list of books for testing purposes
+	 * 
+	 * @return
+	 */
 	private List<Book> generateBookList() {
 		List<Book> listBook = new ArrayList<>();
 		Book book = generateBook();
@@ -114,6 +146,11 @@ public class BookServiceTest {
 		return listBook;
 	}
 
+	/**
+	 * Get a list of booksDTO for testing purposes
+	 * 
+	 * @return
+	 */
 	private List<BookDTO> generateBookDTOList() {
 		List<BookDTO> listBook = new ArrayList<>();
 		BookDTO book = generateBookDTO();
@@ -121,6 +158,11 @@ public class BookServiceTest {
 		return listBook;
 	}
 
+	/**
+	 * Generate a book for testing purposes
+	 * 
+	 * @return
+	 */
 	private Book generateBook() {
 		Book book = new Book();
 		book.setId(UsefulConstants.ID_TEST);
@@ -131,6 +173,11 @@ public class BookServiceTest {
 		return book;
 	}
 
+	/**
+	 * Generate a bookDTO for testing purposes
+	 * 
+	 * @return
+	 */
 	private BookDTO generateBookDTO() {
 		BookDTO book = new BookDTO();
 		book.setId(UsefulConstants.ID_TEST);
