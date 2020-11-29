@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.ceiba.library.dto.LoanDTO;
 import com.ceiba.library.mapper.LoanMapper;
-import com.ceiba.library.exception.LoadException;
+import com.ceiba.library.exception.LoanException;
 import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.models.entity.Loan;
 import com.ceiba.library.models.repository.BookRepository;
@@ -43,7 +43,6 @@ public class LoanServiceImpl implements LoanService {
 	/**
 	 * Injection of the related repository
 	 */
-	@SuppressWarnings("unused")
 	@Autowired
 	private BookRepository bookRepository;
 
@@ -99,22 +98,22 @@ public class LoanServiceImpl implements LoanService {
 	/**
 	 * This method allows you to register the loan in the database
 	 */
-	@SuppressWarnings("unused")
 	@Override
 	public void lendBook(LoanDTO loanDTO) {
 		
 		LocalDate dateDelivery=null;
 		
 		if (!this.valideExistence(loanDTO.getBook().getIsbn())){
-			throw new LoadException("There is no stock of the book to borrow");
+			throw new LoanException("There is no stock of the book to borrow");
+
 		}
 
 		if (this.validePallndrome(loanDTO.getBook().getIsbn())) {
-			throw new LoadException("palindromic books only they can use in the library");
+			throw new LoanException("palindromic books only they can use in the library");
 		}
 
 		if (this.countDigits(loanDTO.getBook().getIsbn()) > 30) {
-			dateDelivery = this.getDateRequest();
+			dateDelivery = this.getDateDelivery();
 		}
 		
 		loanDTO.setDateDelivery(dateDelivery);

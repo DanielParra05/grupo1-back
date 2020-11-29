@@ -30,9 +30,10 @@ public class BookDTO extends RegistryAppDTO {
 	/**
 	 * Corresponds to the number of items available per book
 	 */
-	@NotEmpty
 	private Integer stock;
 	
-	@NotEmpty
+	/**
+	 * Status of book in the library
+	 */
 	private boolean state;
 }

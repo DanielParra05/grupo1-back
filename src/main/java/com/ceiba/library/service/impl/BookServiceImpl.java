@@ -67,7 +67,7 @@ public class BookServiceImpl implements BookService {
 			book.setStock(Integer.valueOf(1));
 			book.setState(Boolean.TRUE);
 		}
-		return null;
+		return edit(book);
 	}
 
 	/**
@@ -87,6 +87,22 @@ public class BookServiceImpl implements BookService {
 	public void delete(Long id) {
 		bookRepository.deleteById(id);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void delete(String isbn) {
+		BookDTO bookDTO = bookMapper.entityToDto(getBookByIsbn(isbn));
+		if(bookDTO != null) {
+			if( bookDTO.getStock() > 1) {
+				bookDTO.setStock(bookDTO.getStock() - 1);
+				edit(bookDTO);
+			} else {
+				bookRepository.deleteById(bookDTO.getId());
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -95,5 +111,9 @@ public class BookServiceImpl implements BookService {
 	public List<BookDTO> getAvailableBooks(boolean available) {
 		List<Book> listEntities = bookRepository.findByState(available);
 		return bookMapper.entitiesToDtos(listEntities);
+	}
+	
+	private Book getBookByIsbn(String isbn) {
+		return bookRepository.findByIsbn(isbn).orElse(null);
 	}
 }

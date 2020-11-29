@@ -103,9 +103,9 @@ public class BookController {
 	 * @param id, id of the book to be removed
 	 * @return
 	 */
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteBook(@PathVariable Long id) {
-		bookService.delete(id);
+	@DeleteMapping("/{isbn}")
+	public ResponseEntity<?> deleteBook(@PathVariable String isbn) {
+		bookService.delete(isbn);
 		return ResponseEntity.noContent().build();
 	}
 

@@ -21,4 +21,6 @@ public interface BookService extends CommonService<BookDTO, Long> {
 	 *                   available books or not @return, a list of DTOS books
 	 */
 	List<BookDTO> getAvailableBooks(boolean available);
+	
+	void delete(String isbn);
 }
