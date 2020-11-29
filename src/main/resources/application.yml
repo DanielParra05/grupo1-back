@@ -11,3 +11,4 @@ spring:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
       naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
     show-sql: true
+    open-in-view: false
