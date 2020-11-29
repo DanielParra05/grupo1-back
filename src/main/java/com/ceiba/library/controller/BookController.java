@@ -129,7 +129,7 @@ public class BookController {
 	 * @param available, indicates if you want to obtain the available books or not
 	 * @return
 	 */
-	@GetMapping("/{available}")
+	@GetMapping("/all/{available}")
 	public ResponseEntity<List<BookDTO>> getAvailableBooks(@PathVariable boolean available) {
 
 		List<BookDTO> listBook = bookService.getAvailableBooks(available);
