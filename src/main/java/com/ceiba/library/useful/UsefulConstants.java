@@ -43,4 +43,9 @@ public class UsefulConstants {
 	 * Title for testing
 	 */
 	public static final String TITLE_BOOK_TEST = "Test Book";
+
+	/**
+	 * User for testing
+	 */
+	public static final String USER_TEST = "user123";
 }
