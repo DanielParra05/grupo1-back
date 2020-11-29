@@ -5,6 +5,6 @@ import com.ceiba.library.dto.LoanDTO;
 
 public interface LoanService extends CommonService<LoanDTO, Long> {
 	
-	void lendBook(String user, String isbn);
+	void lendBook(LoanDTO loanDTO);
 
 }

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ceiba.library.dto.BookDTO;
-import com.ceiba.library.mapper.BookMapperImpl;
+import com.ceiba.library.mapper.BookMapper;
 import com.ceiba.library.models.entity.Book;
 import com.ceiba.library.models.repository.BookRepository;
 import com.ceiba.library.service.BookService;
@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService {
 	 * Injection of the related mapper
 	 */
 	@Autowired
-	private BookMapperImpl bookMapper;
+	private BookMapper bookMapper;
 
 	/**
 	 * {@inheritDoc}} 
