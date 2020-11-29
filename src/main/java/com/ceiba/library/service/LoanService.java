@@ -15,8 +15,7 @@ public interface LoanService extends CommonService<LoanDTO, Long> {
 	/**
 	 * Allows you to make a loan within the application
 	 * 
-	 * @param user, user applying for the loan
-	 * @param isbn, isbn book code
+	 * @param loanDTO, loan to create
 	 */
-	void lendBook(String user, String isbn);
+	void lendBook(LoanDTO loanDTO);
 }

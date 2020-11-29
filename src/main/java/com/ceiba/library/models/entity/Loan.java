@@ -32,7 +32,7 @@ public class Loan extends RegistryApp {
 	/**
 	 * This field stores the maximum delivery date
 	 */
-	@Column(name = "date_delivery", nullable = false)
+	@Column(name = "date_delivery")
 	private LocalDate dateDelivery;
 	
 	/**
